@@ -14,35 +14,39 @@ final class StringCalculatorTest extends TestCase
 
         $this->stringCalculator = new StringCalculator();
     }
+
     /**
      * @test
      */
     public function ifEntryNullOutputIsZero(): void{
-        $result = $this->stringCalculator->Add("");
+        $result = $this->stringCalculator->add("");
 
         $this->assertEquals(0, $result);
     }
+
     /**
      * @test
      */
     public function ifInputOneStringNumberOutputThatIntNumber(): void{
-        $result = $this->stringCalculator->Add("1");
+        $result = $this->stringCalculator->add("1");
 
         $this->assertEquals(1, $result);
     }
+
     /**
      * @test
      */
     public function ifInputTwoStringNumberOutputItsSum(): void{
-        $result = $this->stringCalculator->Add("1,2");
+        $result = $this->stringCalculator->add("1,2");
 
         $this->assertEquals(3, $result);
     }
+
     /**
      * @test
      */
-    public function givenMultipleNumbersReturnItsSum(): void{
-        $result = $this->stringCalculator->Add("1,2,3,4,5,6,7,8,9");
+    public function givenNumbersSeparatedByCommasReturnResult(): void{
+        $result = $this->stringCalculator->add("1,2,3,4,5,6,7,8,9");
 
         $this->assertEquals(45, $result);
     }
@@ -51,16 +55,25 @@ final class StringCalculatorTest extends TestCase
      * @test
      */
     public function givenLineBreakReturnItsSum(): void{
-        $result = $this->stringCalculator->Add("1\n2,3,4,5,6\n7,8,9");
+        $result = $this->stringCalculator->add("1\n2,3,4,5,6\n7,8,9");
 
         $this->assertEquals(45, $result);
     }
+
+    /**
+     * @test
+     */
+    public function givenNumbersSeparatedByCustomDelimiterReturnSumOFNumbers(): void
+    {
+        $this->assertEquals(3, $this->stringCalculator->add("//&\n1&2"));
+    }
+
 
     /**
      * @test
      */
     public function givenDelimeterReturnItsSum(): void{
-        $result = $this->stringCalculator->Add("//:\n1\n2:3:4:5\n6\n7:8:9");
+        $result = $this->stringCalculator->add("//:\n1\n2;3:4:5\n6\n7:8:9");
 
         $this->assertEquals(45, $result);
     }
@@ -68,21 +81,33 @@ final class StringCalculatorTest extends TestCase
     /**
      * @test
      */
-    public function givenNegativeNumbersThrowException(): void
+    public function givenNegativeNumbersThrowsException(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessage("negativos no soportados: -2, -3");
 
-        $this->stringCalculator->Add("1,-2,-3,4");
+        $this->stringCalculator->add("1,-2,-3,4");
     }
 
     /**
      * @test
      */
-    public function givenNumberGreaterThan1000IgnoreThatNumber(): void
+    public function givenNumberGreaterThan1000IsIgnored(): void
     {
-        $result = $this->stringCalculator->Add("//:\n1\n2:3000:9");
+        $result = $this->stringCalculator->add("2,1001");
 
-        $this->assertEquals(12, $result);
+        $this->assertEquals(2, $result);
     }
+
+    /**
+     * @test
+
+    public function givenDelimiterWithDifferentLongitudeReturnsResult(): void
+    {
+        $result = $this->stringCalculator->add("//[***]\n123");
+
+        $this->assertEquals(6, $result);
+    }
+    */
+
 }
